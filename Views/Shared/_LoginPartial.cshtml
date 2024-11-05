@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    @* <li class="nav-item">
+        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
+    </li>
+    <li class="nav-item">
+        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+        </form>
+    </li> *@
+
+    <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
+        <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">@User.Identity.Name<i class="fa fa-angle-down mt-1"></i></a>
+            <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
+                <a href="/account/profile" class="dropdown-item">Profile</a>
+                <form id="logoutform" class="form-inline" asp-area="Identity" asp-page="/account/logout">
+                    <button class="dropdown-item" onclick="document.getElementById('logoutform').submit();">Logout</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
+        <a href="/account/login" class="btn btn-outline-primary">
+            Sign in
+        </a>
+    </div>
+}

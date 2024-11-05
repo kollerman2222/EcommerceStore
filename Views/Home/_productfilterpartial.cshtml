@@ -1,0 +1,52 @@
+﻿@model ProductFilterViewModel
+
+
+<h1> this is partial view </h1>
+
+    <div class="row pb-3">
+        <div class="col-12 pb-1">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <p>filter details can be here</p>
+            </div>
+        </div>
+        @for (var i = 0; i < Model.Products.Count; i++)
+        {
+            <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+                <div class="product-item bg-light mb-4">
+                    <div class="product-img position-relative overflow-hidden">
+                        @*<img class="img-fluid w-100 " src="~/Uploads/Wireless-Smoke-Temperature-detector-01.jpg" alt="Image">*@
+                        <img class="img-fluid w-100 " src="~/Uploads/Wireless-Smoke-Temperature-detector-01.jpg" alt="Image">
+
+                        <div class="product-action">
+                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
+                            <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
+                        </div>
+                    </div>
+                    <div class="text-center py-4">
+                        <a class="h6 text-decoration-none text-truncate" href="">@Model.Products[i].Name</a>
+                        <div class="d-flex align-items-center justify-content-center mt-2">
+                            <h5>@Model.Products[i].Price</h5>
+                        </div>
+                        @*<div class="d-flex align-items-center justify-content-center mb-1">
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small>(99)</small>
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    <div class="col-12">
+        <nav aria-label="Page navigation example">
+           
+        </nav>
+
+    </div>
+    </div>

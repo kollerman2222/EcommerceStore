@@ -1,0 +1,7 @@
+﻿@model CategoriesViewModel
+
+@foreach (var item in Model.Categorys)
+{
+    <a asp-controller="Products" asp-action="shop" asp-route-id="@item.Id" class="nav-item nav-link">@item.Name</a>
+
+}

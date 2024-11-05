@@ -1,0 +1,378 @@
+﻿@model ProductsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@{
+    bool first = true;
+}
+
+
+
+<style>
+
+    #thumbnail-slider img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        margin: 10px;
+        cursor: pointer;
+        border: 1px solid black;
+        border-radius: 10px;
+    }
+
+        #thumbnail-slider img.active {
+            border: 2px solid orange;
+            border-radius: 10px;
+        }
+
+    #thumbnail-slider {
+        border: 1px solid black;
+
+    }
+
+@@media (max-width: 500px) {
+  #thumbnail-slider img {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+@@media (min-width: 501px) and (max-width: 750px) {
+  #thumbnail-slider img {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+
+
+@@media (min-width: 751px) {
+  #thumbnail-slider img {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+
+</style>
+
+<div class="container-fluid pb-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 mb-30" id="image-holder">
+            @if(Model.ProductGallery.Count == 0)
+            {
+                <div id="product-carousel" class="carousel slide" data-ride="carousel" data-interval="2000">
+                    <div class="carousel-inner bg-light">
+
+                        <img src="~/Uploads/products/@Model.ProductImage" style=" width: 100%; height: 600px; object-fit: cover;" alt="Image" />
+
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div id="product-carousel" class="carousel slide" data-ride="carousel" data-interval="2000">
+                    <div class="carousel-inner bg-light">
+
+
+                        @foreach (var item in Model.ProductGallery)
+                        {
+                            <div class="carousel-item   @(first ? "active" : "") ">
+
+                                <img src="~/Uploads/@item.ImageURL" style=" width: 100%; height: 600px; object-fit: cover;" alt="Image" />
+
+
+                            </div>
+                            first = false;
+                        }
+                    </div>
+
+                    <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
+                        <i class="fa fa-4x fa-angle-left text-dark"></i>
+                    </a>
+                    <a class="carousel-control-next" href="#product-carousel" data-slide="next">
+                        <i class="fa fa-4x fa-angle-right text-dark"></i>
+                    </a>
+                </div>
+                <div id="thumbnail-slider" style="display: flex; justify-content: center; align-items: center; ">
+                    @*<a class="slider-control" data-slide="prev" style="align-self: flex-start;">
+                <i class="fa fa-4x fa-angle-left text-dark" ></i>
+                </a>*@
+
+                    @for (int i = 0; i < Model.ProductGallery.Count; i++)
+                    {
+                        var item = Model.ProductGallery.ElementAt(i);
+                        <img src="~/Uploads/@item.ImageURL" class="thumbnail-image" data-target="#product-carousel" data-slide-to="@i" />
+                    }
+                    @*<a class="slider-control" data-slide="next" style="align-self: flex-start;">
+                <i class="fa fa-4x fa-angle-right text-dark"></i>
+                </a>*@
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-7 h-auto mb-30">
+            <div class="h-100 bg-light p-30">
+                <h3>@Model.Name</h3>
+
+                <h4 class="font-weight-semi-bold mb-4">$@Model.Price.00</h4>
+                <p class="mb-4">
+                    we can put anything here like product about we can add this property later
+                </p>
+                <div class="d-flex mb-3">
+                    <strong class="text-dark mr-3">Brand:</strong>
+                    <label>@Model.Brand</label>
+                </div>
+                <div class="d-flex mb-3">
+                    <strong class="text-dark mr-3">Department:</strong>
+                    <label>@Model.DepartmentName</label>
+                </div>
+                <div class="d-flex mb-3">
+                    <strong class="text-dark mr-3">Category:</strong>
+                    <label>@Model.CategoryName</label>
+                </div>
+                <div class="d-flex align-items-center mb-4 pt-2">
+                    <a class="btn btn-primary" asp-action="AddToShoppingCart" asp-controller="ShoppingCart" asp-route-id="@Model.Id">Add to Cart</a>
+                </div>
+                <div class="d-flex pt-2">
+                    <strong class="text-dark mr-2">Share on:</strong>
+                    <div class="d-inline-flex">
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="bg-light p-30">
+                <div class="nav nav-tabs mb-4">
+                    <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Description</a>
+                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Specification</a>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab-pane-1">
+                        <h4 class="mb-3">Product Description</h4>
+                        <p>@Model.Description</p>
+                        <p>
+                            Expertly crafted for durability and style.
+                        </p>
+                        <p>
+                            Designed to meet daily needs and enhance your experience.
+                        </p>
+                        <p>
+                            Combines functionality with a sleek, modern design.
+                        </p>
+                        <p>
+                            Made with high-quality materials to ensure long-lasting use.
+                        </p>
+                        <p>
+                            Customer-approved for performance and satisfaction.
+                        </p>
+                        <p>
+                            Eco-friendly materials and sustainable production practices.
+                        </p>
+                    </div>
+                    <div class="tab-pane fade" id="tab-pane-2">
+                        <h4 class="mb-3">Product Specifications</h4>
+                        <p>@Model.Specification</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid py-5">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">You May Also Like</span></h2>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel related-carousel">
+                @foreach (var item in Model.ProductAlot.Where(p=>p.Id!=Model.Id))
+                {
+                    <div class="product-item testimage bg-light">
+                        <div class="product-img position-relative overflow-hidden">
+                            <img class="img-fluid w-100" src="~/Uploads/products/@item.ProductImage" alt="">
+                            <div class="product-action">
+                                <a asp-action="AddToShoppingCart" asp-controller="ShoppingCart" asp-route-id="@item.Id" class="btn btn-dark"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                <a asp-action="productdetailstest" asp-controller="Products" asp-route-id="@item.Id" class="btn btn-info" target="_blank"><i class="fa fa-search"></i> View Details</a>
+                            </div>
+                        </div>
+                        <div class="text-center py-4">
+                            <a class="h6 text-decoration-none text-truncate" href="">@item.Name</a>
+                            <div class="d-flex align-items-center justify-content-center mt-2">
+                                <h5>$@item.Price.00</h5><h6 class="text-muted ml-2"><del>$1000</del></h6>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mb-1">
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small class="fa fa-star text-primary mr-1"></small>
+                                <small>(99)</small>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(document).click(function (event) {
+                if (!$(event.target).closest("#thumbnail-slider").length) {
+                    $(".thumbnail-image").removeClass("active");
+                }
+            });
+            $(".thumbnail-image").click(function () {
+                $(".thumbnail-image").removeClass("active");
+                $(this).addClass("active");
+                $("#product-carousel").carousel($(this).data("slide-to"));
+            });
+        });
+    </script>
+
+
+    <script>
+        //window.addEventListener('resize', function () {
+        //    var width = window.innerWidth;
+        //    var images = document.querySelectorAll('#thumbnail-slider img');
+
+        //    if (width < 768)
+        //    {
+        //        for (var i = 0; i < images.length; i++)
+        //        {
+        //            images[i].style.width = '45px';
+        //            images[i].style.height = '45px';
+        //        }
+        //    }           
+        //    else
+        //    {
+        //        for (var i = 0; i < images.length; i++)
+        //        {
+        //            images[i].style.width = '';
+        //            images[i].style.height = '';
+        //        }
+        //    }
+        //});
+
+
+
+
+        //$(window).on('resize', function () {
+        //    var imageHolderWidth = $('#image-holder').width();
+        //    var images = $('#thumbnail-slider img');
+        //    var originalSize = {
+        //        'width': '100px',
+        //        'height': '100px'
+        //    };
+
+        //    images.each(function () {
+        //        var image = $(this);
+
+        //        if (!image.attr('data-original-width')) {
+        //            image.attr('data-original-width', originalSize.width);
+        //            image.attr('data-original-height', originalSize.height);
+        //        }
+        //    });
+
+        //    if (imageHolderWidth < 500) {
+        //        images.css({
+        //            'width': '25px',
+        //            'height': '25px'
+        //        });
+        //    } else if (imageHolderWidth < 750) {
+        //        images.css({
+        //            'width': '50px',
+        //            'height': '50px'
+        //        });
+        //    } else {
+        //    }
+        //});
+
+
+        @* working *@
+
+
+        window.addEventListener('resize', function () {
+            var imageHolder = document.querySelector('#image-holder');
+            var imageHolderWidth = imageHolder.clientWidth;
+            var images = document.querySelectorAll('#thumbnail-slider img');
+            var originalSize = {
+                'width': '100px',
+                'height': '100px'
+            };
+
+            for (var i = 0; i < images.length; i++) {
+                var image = images[i];
+
+                if (!image.dataset.originalWidth) {
+                    image.dataset.originalWidth = originalSize.width;
+                    image.dataset.originalHeight = originalSize.height;
+                }
+            }
+
+            if (imageHolderWidth < 500) {
+                for (var i = 0; i < images.length; i++) {
+                    images[i].style.width = '25px';
+                    images[i].style.height = '25px';
+                }
+            } else if (imageHolderWidth < 750) {
+                for (var i = 0; i < images.length; i++) {
+                    images[i].style.width = '50px';
+                    images[i].style.height = '50px';
+                }
+            } else {
+                for (var i = 0; i < images.length; i++) {
+                    images[i].style.width = originalSize.width;
+                    images[i].style.height = originalSize.height;
+                }
+            }
+        });
+
+
+
+
+       
+      
+    </script>
+
+
+@*arrows slider*@
+
+@*<script>
+    $(document).ready(function () {
+        $(".slider-control").click(function () {
+            var slideTo = $(this).data("slide");
+            var currentSlide = $(".thumbnail-image.active").data("slide-to");
+            var totalSlides = $(".thumbnail-image").length;
+            if (slideTo == "prev") {
+                var targetSlide = currentSlide > 0 ? currentSlide - 1 : totalSlides - 1;
+            } else {
+                var targetSlide = currentSlide < totalSlides - 1 ? currentSlide + 1 : 0;
+            }
+            $(".thumbnail-image").removeClass("active");
+            $('.thumbnail-image[data-slide-to="' + targetSlide + '"]').addClass("active");
+            $("#product-carousel").carousel(targetSlide);
+        });
+    });
+
+</script>*@
+}

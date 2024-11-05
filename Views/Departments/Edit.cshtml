@@ -1,0 +1,94 @@
+﻿@model DepartmentsViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@*<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Departmenttt.Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SingleImage" class="control-label"></label>
+                <input type="file" asp-for="SingleImage" class="form-control" />
+                <span asp-validation-for="SingleImage" class="text-danger"></span>
+            </div>
+            <img src="~/Uploads/@Model.DepImageVM" style="width:124px;" class="img-thumbnail" />
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>*@
+
+
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-lg-8">
+            <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Edit Department</span></h5>
+            <div class="bg-light p-30 mb-5">
+                <form asp-action="Edit" method="post" enctype="multipart/form-data" asp-controller="Departments">
+                    <div class="row">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="SingleImageUpload" class="control-label">choose main image</label>
+                            <input type="file" asp-for="SingleImageUpload" onchange="checkFileSizeAndExtensionSingle(this)" class="form-control"/>
+                            <span asp-validation-for="SingleImageUpload" class="text-danger"></span>
+                        </div>
+                        <img src="~/Uploads/departments/@Model.DepartmentImage" style="width:124px;" class="img-thumbnail" />
+
+                        <div class=" col-md-6 form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div>
+                <a class="btn btn-primary" asp-action="Index">Back to Departments List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+<script>
+    function checkFileSizeAndExtensionSingle(input) {
+    if (input.files && input.files[0]) {
+        var file = input.files[0];
+        var fileSize = file.size;
+        var fileName = file.name;
+        var fileExtension = fileName.substr(fileName.lastIndexOf('.') + 1);
+
+        if (fileSize > 200000) {
+            alert("The size of the image should not exceed 200KB.");
+            input.value = "";
+        }
+        else if (fileExtension != "jpg" && fileExtension != "jpeg" && fileExtension != "png" && fileExtension != "gif" && fileExtension != "PNG" && fileExtension != "JPG" && fileExtension != "JPEG") {
+            alert("only images allowed");
+            input.value = "";
+        }
+    }
+}
+
+</script>
+}

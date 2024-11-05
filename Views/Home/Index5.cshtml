@@ -1,0 +1,374 @@
+﻿@model ProductShopViewModel
+
+@{
+    ViewData["Title"] = "Index4";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var departmentQuery = Context.Request.Query["depName"];
+}
+
+<style>
+    #depnametag:hover{
+        background-color:deepskyblue;
+        text-decoration:none;
+        
+    }
+
+</style>
+
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+                <a class="breadcrumb-item text-dark" href="#">Home</a>
+                <a class="breadcrumb-item text-dark" href="#">Shop</a>
+                <span class="breadcrumb-item active">Shop List</span>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<!-- Shop Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+
+        <!-- Shop Sidebar Start -->
+        <div class="col-lg-3 col-md-4">
+
+            <h4>Select Filters</h4>
+            <br />
+            <form method="post" asp-controller="Home" asp-action="FilterProductsByCategory">
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Department</span></h5>
+                <div class="bg-light p-4 mb-30">
+                    @foreach (var item in Model.Departments)
+                    {
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            @* <input class="custom-control-input " type="checkbox" name="departments" value="@item.Id" id="department-@item.Id" />
+                            <label class="custom-control-label" for="department-@item.Id">@item.Name</label> *@
+                            <a id="depnametag" style="color:black;" asp-action="Index5" asp-route-depName="@item.Name">@item.Name</a>
+                        </div>
+                    }
+
+                </div>
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Category</span></h5>
+                <div class="bg-light p-4 mb-30">
+                    @if (string.IsNullOrEmpty(departmentQuery))
+                    {
+                       
+                            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                                @* <input class="custom-control-input " type="checkbox" name="categories" value="@item.Id" id="categories-@item.Id" />
+                                <label class="custom-control-label" for="categories-@item.Id">@item.Name</label> *@
+                            <h4>Choose a Department</h4>
+                            </div>
+                        
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.Categories.Where(d => d.Department.Name == departmentQuery))
+                        {
+                            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                                <input class="custom-control-input findcheckbox " type="checkbox" name="categories" value="@item.Id" id="categories-@item.Id" />
+                                <label class="custom-control-label" for="categories-@item.Id">@item.Name</label>
+                            </div>
+                        }
+                    }
+                   
+                </div>
+
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Price Range</span></h5>
+                <div class="bg-light p-4 mb-30">
+                    @if (string.IsNullOrEmpty(departmentQuery))
+                    {
+
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            @* <input class="custom-control-input " type="checkbox" name="categories" value="@item.Id" id="categories-@item.Id" />
+                        <label class="custom-control-label" for="categories-@item.Id">@item.Name</label> *@
+                            <h4>Choose a Department</h4>
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="custom-control d-flex align-items-center justify-content-between mb-3">
+                            <input class="custom-control-input findradio " type="radio" name="pricerange" value="max500" id="1" />
+                            <label class="custom-control-label" for="1">Maximum 500</label>
+                        </div>
+                        <div class="custom-control d-flex align-items-center justify-content-between mb-3">
+                            <input class="custom-control-input findradio " type="radio" name="pricerange" value="min500" id="2" />
+                            <label class="custom-control-label" for="2">Minimum 500</label>
+                        </div>
+                        <div class="custom-control  d-flex align-items-center justify-content-between mb-3">
+                            <input class="custom-control-input findradio " type="radio" name="pricerange" value="min1000" id="3" />
+                            <label class="custom-control-label" for="3">Minimum 1000</label>
+                        </div>
+                        <div class="custom-control  d-flex align-items-center justify-content-between mb-3">
+                            <input class="custom-control-input findradio " type="radio" name="pricerange" value="max1000" id="4" />
+                            <label class="custom-control-label" for="4">Maximum 1000</label>
+                        </div>
+                    }
+                       
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Shop Product Start -->
+        <div class="col-lg-9 col-md-8">
+            <div class="row pb-3 filtered-products-container" id="filteredProductsDiv">
+                <div class="col-12 pb-1">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <a class="btn btn-primary" id="resetFilter"><h5>Reset Filters</h5></a>
+
+                    </div>
+                </div>
+
+                    @foreach (var item in Model.Products)
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+                        <div class="product-item testimage bg-light mb-4">
+                                <div class="product-img position-relative overflow-hidden">
+                                    <img class="img-fluid w-100 " src="~/Uploads/products/@item.ProductImage" alt="Image">
+
+                                    <div class="product-action">
+                                    <a asp-action="AddToShoppingCart" asp-controller="ShoppingCart" asp-route-id="@item.Id" class="btn btn-dark"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                                    <a asp-action="productdetailstest" asp-controller="Products" asp-route-id="@item.Id" class="btn btn-info" target="_blank"><i class="fa fa-search"></i> View Details</a>
+                                    </div>
+                                </div>
+
+                                <div class="text-center py-4">
+                                    <a class="h6 text-decoration-none text-truncate" href="">@item.Name</a>
+                                    <div class="d-flex align-items-center justify-content-center mt-2">
+                                    <h5>$@item.Price.00</h5>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-center mb-1">
+                                        <small class="fa fa-star text-primary mr-1"></small>
+                                        <small class="fa fa-star text-primary mr-1"></small>
+                                        <small class="fa fa-star text-primary mr-1"></small>
+                                        <small class="fa fa-star text-primary mr-1"></small>
+                                        <small class="fa fa-star text-primary mr-1"></small>
+                                        <small>(99)</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                
+                @if (string.IsNullOrEmpty(departmentQuery))
+                {
+                    <div class="col-12">
+                        @if (Model.TotalPages > 1)
+                        {
+                            <nav>
+                                <ul class="pagination justify-content-center">
+                                    @if (Model.Page > 1)
+                                    {
+                                        <li class="page-item"><a class="page-link" asp-action="Index5" asp-controller="Home" asp-route-pageNumber="@(Model.Page - 1)">Previous</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+
+                                    }
+
+                                    @for (int i = 1; i <= Model.TotalPages; i++)
+                                    {
+                                        <li class="page-item @(i == Model.Page ? "active" : "")"><a class="page-link" asp-action="Index5" asp-controller="Home" asp-route-pageNumber="@i">@i</a></li>
+
+                                    }
+                                    @if (Model.Page < Model.TotalPages)
+                                    {
+                                        <li class="page-item"><a class="page-link" asp-action="Index5" asp-controller="Home" asp-route-pageNumber="@(Model.Page + 1)">Next</a></li>
+
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+
+                                    }
+                                    @*
+                            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li> *@
+                                </ul>
+                            </nav>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="col-12">
+                    @if (Model.TotalPages > 1)
+                    {
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                    @if (Model.Page > 1)
+                                    {
+                                        <li class="page-item"><a class="page-link" asp-action="Index5" asp-controller="Home" asp-route-depName="@Model.depName" asp-route-pageNumber="@(Model.Page - 1)">Previous</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+
+                                    }
+
+                                    @for (int i = 1; i <= Model.TotalPages; i++)
+                                    {
+                                        <li class="page-item @(i == Model.Page ? "active" : "")"><a class="page-link" asp-action="Index5" asp-controller="Home" asp-route-depName="@Model.depName" asp-route-pageNumber="@i">@i</a></li>
+
+                                    }
+                                    @if (Model.Page < Model.TotalPages)
+                                    {
+                                        <li class="page-item"><a class="page-link" asp-action="Index5" asp-controller="Home" asp-route-depName="@Model.depName" asp-route-pageNumber="@(Model.Page + 1)">Next</a></li>
+
+                                    }
+                                    else
+                                    {
+                                        <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+
+                                    }
+    @* 
+                                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Next</a></li> *@
+                            </ul>
+                        </nav>
+                    }
+                </div>
+                }
+
+            </div>
+        </div>
+        <!-- Shop Product End -->
+    </div>
+</div>
+<!-- Shop End -->
+<!-- Back to Top -->
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('.findcheckbox').on('change', function () {
+               
+
+                let urlParams = new URLSearchParams(window.location.search);
+
+                urlParams.delete('categories');
+
+                var selectedPriceRange = $(".findradio:checked").val();
+
+                var selectedCategories = [];
+
+                $('.findcheckbox:checked').each(function () 
+                {
+                    selectedCategories.push(this.value);
+                })
+
+                if (selectedCategories.length > 0) 
+                {
+                    urlParams.append('categories', selectedCategories.join(','));
+                }
+
+                const newUrl = `${window.location.origin}${window.location.pathname}?${urlParams.toString()}`;
+
+                window.history.pushState({}, document.title, newUrl);
+
+                $.ajax({
+                    url: '@Url.Action("FilterProductsByCategory")',  
+                    type: 'POST',
+                    data: { categories: selectedCategories, pricerange: selectedPriceRange },
+                    success: function (response) {
+                        $('#filteredProductsDiv').html(response);
+                        $('html, body').animate({
+                            scrollTop: $('#filteredProductsDiv').offset().top
+                        }, 0);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        }); // pass all url parameters to index5 and remove pasigination from filterproductbycategory method and i can make index5 method handel everything and return partial and make getfilteredproductbycategry method only to return new filtered products
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#resetFilter').on('click', function (event) {
+                event.preventDefault(); // Prevent default link behavior
+
+                // Uncheck all checkboxes with the 'findcheckbox' class
+                $('.findcheckbox').prop('checked', false);
+                $('.findradio').prop('checked', false);
+
+
+                // Reset the URL to the main path without reloading the page
+                const mainPath = window.location.origin + window.location.pathname;
+                window.history.pushState({}, document.title, mainPath);
+
+                location.reload();
+
+                // Optionally, trigger an AJAX call to update content if necessary
+                var selectedCategories = [];
+                $.ajax({
+                    url: '@Url.Action("FilterProductsByCategory")',
+                    type: 'POST',
+                    data: { categories: selectedCategories, pricerange: selectedPriceRange },
+                    success: function (response) {
+                        $('#filteredProductsDiv').html(response);
+                        $('html, body').animate({
+                            scrollTop: $('#filteredProductsDiv').offset().top
+                        }, 0);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+
+
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#testpagelink').on('click', function (event) {
+                event.preventDefault(); // Prevent default link behavior
+
+                var selectedPriceRange = $(".findradio:checked").val();
+
+                var selectedCategories = [];
+                $('.findcheckbox:checked').each(function () {
+                    selectedCategories.push(this.value);
+                })
+
+                var urlParams = new URLSearchParams(window.location.search);
+                var depName = urlParams.get('depName');
+                var pageNumber = urlParams.get('pageNumber');
+                const categoriesParam = urlParams.get('categories');
+
+                var categoriesNames = categoriesParam ? categoriesParam.split(',') : [];
+                console.log(categoriesNames);
+                // Optionally, trigger an AJAX call to update content if necessary
+                var selectedCategories = [];
+                $.ajax({
+                    url: '@Url.Action("FilterProductsByCategory")',
+                    type: 'POST',
+                    data: { categories: selectedCategories, pricerange: selectedPriceRange, depName: depName, pageNumber: pageNumber },
+                    success: function (response) {
+                        $('#filteredProductsDiv').html(response);
+                        $('html, body').animate({
+                            scrollTop: $('#filteredProductsDiv').offset().top
+                        }, 0);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+
+
+            });
+        });
+    </script>
+
+}

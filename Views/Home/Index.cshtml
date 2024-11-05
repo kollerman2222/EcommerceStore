@@ -1,0 +1,205 @@
+﻿@model ProductFilterViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index Home controller</h1>
+
+@*@if (ViewData["Source"] != null)
+{
+    <h2>Navigating to: @ViewData["Source"]</h2>
+}*@
+
+<input type="hidden" vale="hellotest" />
+
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+                <a class="breadcrumb-item text-dark" href="#">Home</a>
+                <a class="breadcrumb-item text-dark" href="#">Shop</a>
+                <span class="breadcrumb-item active">Shop List</span>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<!-- Shop Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+
+        <!-- Shop Sidebar Start -->
+        <div class="col-lg-3 col-md-4">
+
+            <h4>Select Filters</h4>
+            <br />
+            <form method="post" asp-controller="Home" asp-action="Index">
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Department</span></h5>
+                <div class="bg-light p-4 mb-30">
+
+                    @for (var i = 0; i < Model.Departments.Count; i++)
+                    {
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" name="departmentFilter" class="custom-control-input " id="@Model.Departments[i].Name" value="@Model.Departments[i].Name" @(Model.SelectedDepartments.Contains(Model.Departments[i].Name) ? "checked" : "") />
+                            <label class="custom-control-label" for="@Model.Departments[i].Name">@Model.Departments[i].Name</label>
+                        </div>
+                    }
+                </div>
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Category</span></h5>
+                <div class="bg-light p-4 mb-30">
+
+                    @for (var i = 0; i < Model.Categories.Count; i++)
+                    {
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" name="categoryFilter" class="custom-control-input " id="@Model.Categories[i].Name" value="@Model.Categories[i].Name" @(Model.SelectedCategories.Contains(Model.Categories[i].Name) ? "checked" : "") />
+                            <label class="custom-control-label" for="@Model.Categories[i].Name">@Model.Categories[i].Name</label>
+                        </div>
+
+                    }
+
+                </div>
+
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Price Range</span></h5>
+                <div class="bg-light p-4 mb-30">
+                    <div>
+                        <input type="number" name="minPrice" placeholder="Minimum Price" style="display: block; margin-bottom: 10px;" />
+                        <br>
+                        <input type="number" name="maxPrice" placeholder="Maximum Price" style="display: block;" />
+                    </div>
+                </div>
+
+
+
+                <input type="submit" class="btn btn-primary" value="Filter" />
+                <input type="submit" name="reset" id="clear-filters" href="#" class="btn btn-outline-dark" value="Reset" />
+            </form>
+        </div>
+
+        <!-- Shop Product Start -->
+        <div class="col-lg-9 col-md-8">
+            <div class="row pb-3" id="products-div">
+                <div class="col-12 pb-1">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <p>filter details can be here</p>
+                    </div>
+                </div>
+                @for (var i = 0; i < Model.Products.Count; i++)
+                {
+                    <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+                        <div class="product-item bg-light mb-4">
+                            <div class="product-img position-relative overflow-hidden">
+                                @*<img class="img-fluid w-100 " src="~/Uploads/Wireless-Smoke-Temperature-detector-01.jpg" alt="Image">*@
+                                <img class="img-fluid w-100 " src="~/Uploads/Wireless-Smoke-Temperature-detector-01.jpg" alt="Image">
+
+                                <div class="product-action">
+                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-shopping-cart"></i></a>
+                                    <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>
+                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
+                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+                            <div class="text-center py-4">
+                                <a class="h6 text-decoration-none text-truncate" href="">@Model.Products[i].Name</a>
+                                <div class="d-flex align-items-center justify-content-center mt-2">
+                                    <h5>@Model.Products[i].Price</h5>
+                                </div>
+                                @*<div class="d-flex align-items-center justify-content-center mb-1">
+                                        <small class="fa fa-star text-primary mr-1"></small>
+                                        <small class="fa fa-star text-primary mr-1"></small>
+                                        <small class="fa fa-star text-primary mr-1"></small>
+                                        <small class="fa fa-star text-primary mr-1"></small>
+                                        <small class="fa fa-star text-primary mr-1"></small>
+                                        <small>(99)</small>
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+
+                <div class="col-12">
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Shop Product End -->
+    </div>
+</div>
+<!-- Shop End -->
+<!-- Back to Top -->
+<a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+            $('form').submit(function (event) {
+                event.preventDefault(); // prevent the form from submitting as a regular request
+
+                // send an AJAX request to the server
+                $.ajax({
+                    url: '/Home/Index', // the URL of the action method
+                    type: 'POST', // the HTTP method
+                    data: $(this).serialize(), // the form data
+                    success: function (data) { // the function to run when the request succeeds
+                        $('#products-div').html(data); // update the table content with the response data
+
+                        $('html, body').animate({
+                            scrollTop: $('#products-div').offset().top
+                        }, 0);
+
+                    }
+                });
+            });
+        });
+
+    </script>
+
+
+
+    <script>
+function clearFilters() {
+    // Reset checkboxes
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(function(checkbox) {
+        checkbox.checked = false;
+    });
+
+    // Send AJAX request
+    $.ajax({
+        url: '@Url.Action("Index")',
+        type: 'POST',
+        data: { departmentFilter: [], categoryFilter: [] },
+        success: function(result) {
+            $('#product-filter').html(result);
+        }
+    });
+}
+
+$(document).ready(function() {
+    $('#clear-filters').click(clearFilters);
+});
+    </script>
+
+
+
+
+
+
+
+
+
+}

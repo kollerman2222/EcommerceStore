@@ -1,0 +1,107 @@
+﻿@model CategoriesViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container-fluid pt-5">
+    <h4>Category Details</h4>
+    <table class="table table-bordered table-hover bg-light" id="myTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    @Html.Label("Category Name")
+                </th>
+                <th>
+                    @Html.Label("Department Name")
+                </th>
+                <th>
+                    @Html.Label("Total Number of Products belong to this Category")
+                </th>
+                <th>@Html.Label("Action Links")</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.DepartmentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Productss.Count)
+                </td>
+                <td>
+                    <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit Category</a>
+                    
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete Category</a>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+
+    <h4> Related categories and departments </h4>
+
+    <table class="table table-bordered table-hover bg-light" id="myTable2">
+
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    @Html.Label("Product Image")
+
+                </th>
+                <th>
+                    @Html.Label("Product Name")
+                </th>
+                <th>
+                    @Html.Label("Category Name")
+                </th>
+                <th>
+                    @Html.Label("Department Name")
+                </th>
+                <th>
+                    @Html.Label("Action Links")
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Productss)
+            {
+                <tr>
+                    <td>
+                        <img src="~/Uploads/@item.ProductImage" style="width:50px;" class="img-thumbnail" />
+
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Department.Name)
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-primary" asp-action="Edit" asp-controller="Products" asp-route-id="@item.Id">Edit Product</a>
+                        <a class="btn btn-outline-primary" asp-action="Details" asp-controller="Products" asp-route-id="@item.Id"> Product Details</a>
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-controller="Products" asp-route-id="@item.Id">Delete Product</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+    <div>
+
+        <a class="btn btn-primary" asp-action="Index">Back To Categories List</a>
+    </div>
+</div>
+
+

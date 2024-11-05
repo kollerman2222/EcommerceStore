@@ -1,0 +1,276 @@
+﻿@model ProductsViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+<hr />
+@*<div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Producttt.Id" />
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DepartmentID" class="control-label"></label>
+                    <select asp-for="DepartmentID" class="form-control" asp-items="ViewBag.DepartmentId"></select>
+                    <span asp-validation-for="DepartmentID" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CategoryID" class="control-label"></label>
+                    <select asp-for="CategoryID" class="form-control" asp-items="ViewBag.CategoryId">
+                        <option value=""></option>
+
+                    </select>
+                    <span asp-validation-for="CategoryID" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+
+                    <label asp-for="Images" class="control-label"></label>
+                    <input asp-for="Images" class="form-control" />
+                    <span asp-validation-for="Images" class="text-danger"></span>
+
+                    @foreach (var item in Model.pgs)
+                    {
+                        <span id="dimg">
+                            <img src="~/Uploads/@item.ImageURL" style="width:124px;" class="img-thumbnail" />
+                            <a href="javascript:;" class="btn btn-danger js-delete" data-id="@item.Id">delete</a>
+                        </span>
+                    }
+                </div>
+
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>*@
+
+
+
+
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-lg-8">
+            <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Edit Product</span></h5>
+            <div class="bg-light p-30 mb-5">
+                <form asp-action="Edit" enctype="multipart/form-data">
+                    <div class="row">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Brand" class="control-label"></label>
+                            <input asp-for="Brand" class="form-control" />
+                            <span asp-validation-for="Brand" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <input asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Price" class="control-label"></label>
+                            <input asp-for="Price" class="form-control" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="DepartmentName"></label>
+                            <select class="custom-select" asp-for="DepartmentId" asp-items="ViewBag.DepartmentId">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="CategoryName"></label>
+                            <select class=" custom-select" asp-for="CategoryId" asp-items="ViewBag.CategoryId">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="MultiImageUpload" class="control-label"></label>
+                            <input asp-for="MultiImageUpload" onchange="checkFileSizeAndExtensionMultiple(this)" class="form-control" multiple />
+                            <span asp-validation-for="MultiImageUpload" class="text-danger"></span>
+
+                            @*@foreach (var item in Model.pgs)
+                                {
+                                    <span id="dimg">
+                                        <img src="~/Uploads/@item.ImageURL" style="width:124px;" class="img-thumbnail" />
+                                        <a href="javascript:;" class="btn btn-danger js-delete" data-id="@item.Id">delete</a>
+                                    </span>
+                                }*@
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label asp-for="SingleImageUpload" class="control-label"></label>
+                            <input type="file" asp-for="SingleImageUpload" onchange="checkFileSizeAndExtensionSingle(this)" class="form-control" />
+                            <span asp-validation-for="SingleImageUpload" class="text-danger"></span>
+                        </div>
+
+                        <img src="~/Uploads/products/@Model.ProductImage" style="width:124px;" class="img-thumbnail" />
+
+                        <div class=" col-md-6 form-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div>
+                <a class="btn btn-primary" asp-action="Index">Back To Products List</a>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Product Images</span></h5>
+            <div class="bg-light p-30 mb-5">
+                <div class="border-bottom">
+                    @foreach (var item in Model.ProductGallery)
+                    {
+                        <div class="d-flex justify-content-between">
+
+                            <span id="dimg">
+                                <img src="~/Uploads/@item.ImageURL" style="width:124px;" class="img-thumbnail" />
+                                <a href="javascript:;" class="btn btn-danger js-delete" data-id="@item.Id">delete</a>
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script>
+        $(document).ready(function () {
+
+            $('#DepartmentId').on('change', function () {
+
+                var depid = $(this).val();
+                var catlist = $('#CategoryId');
+
+                catlist.empty();
+                catlist.append('<option></option>');
+
+                if (depid !== '') {
+                    $.ajax({
+
+                        url: '/Products/GetCategory?depid=' + depid,
+                        success: function (categoryy) {
+
+                            $.each(categoryy, function (i, catt) {
+                                catlist.append($('<option></option>').attr('value', catt.id).text(catt.name));
+
+                            });
+
+                        },
+                        error: function () {
+                            alert('something is wrong');
+                        }
+
+                    });
+                }
+
+            });
+
+        });
+
+
+    </script>
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('.js-delete').on('click', function () {
+
+                var btn = $(this);
+
+                $.ajax({
+
+                    url: '/Products/DeleteProductImageAjax/' + btn.data('id'),
+                    success: function () {
+                        /*$('#dimg').remove();*/
+                        btn.parent().remove();
+
+                    },
+                    error: function () {
+                        alert('something went wrong')
+                    }
+
+                });
+            });
+        });
+
+    </script>
+
+
+    <script>
+        function checkFileSizeAndExtensionMultiple(input, event) {
+            if (input.files && input.files.length > 0) {
+                for (var i = 0; i < input.files.length; i++) {
+                    var file = input.files[i];
+                    var fileSize = file.size;
+                    var fileName = file.name;
+                    var fileExtension = fileName.substr(fileName.lastIndexOf('.') + 1);
+
+                    if (fileSize > 200000) {
+                        alert("The size of the image should not exceed 200KB.");
+                        input.value = "";
+                        event.preventDefault();
+                        return;
+                    }
+                    else if (fileExtension != "jpg" && fileExtension != "jpeg" && fileExtension != "png" && fileExtension != "gif" && fileExtension != "PNG" && fileExtension != "JPG" && fileExtension != "JPEG") {
+                        alert("only images allowed");
+                        input.value = "";
+                        event.preventDefault();
+                        return;
+                    }
+                }
+            }
+        }
+
+    </script>
+
+    <script>
+        function checkFileSizeAndExtensionSingle(input) {
+            if (input.files && input.files[0]) {
+                var file = input.files[0];
+                var fileSize = file.size;
+                var fileName = file.name;
+                var fileExtension = fileName.substr(fileName.lastIndexOf('.') + 1);
+
+                if (fileSize > 200000) {
+                    alert("The size of the image should not exceed 200KB.");
+                    input.value = "";
+                }
+                else if (fileExtension != "jpg" && fileExtension != "jpeg" && fileExtension != "png" && fileExtension != "gif" && fileExtension != "PNG" && fileExtension != "JPG" && fileExtension != "JPEG") {
+                    alert("only images allowed");
+                    input.value = "";
+                }
+            }
+        }
+
+    </script>
+
+
+
+}

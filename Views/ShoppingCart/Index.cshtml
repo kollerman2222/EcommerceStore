@@ -1,0 +1,244 @@
+﻿@model ShoppingCartViewModel
+
+@*
+    <div class="row checkoutForm">
+        <h2>Your shopping cart</h2>
+        <h4>Here are the drinks in your shopping cart.</h4>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Selected amount</th>
+                    <th>Drink</th>
+                    <th class="text-right">Price</th>
+                    <th class="text-right">Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var line in Model.ShoppingCart.ShoppingCartItems)
+                {
+                    <tr>
+                        <td class="text-center">@line.Amount</td>
+                        <td class="text-left">@line.product.Name</td>
+                        <td class="text-right">@line.product.Price.ToString("c")</td>
+                        <td class="text-right">
+                            @((line.Amount * line.product.Price).ToString("c"))
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart" asp-route-id="@line.product.Id"> remove</a>
+                            <a class="btn btn-primary" asp-action="AddToShoppingCart" asp-controller="ShoppingCart" asp-route-id="@line.product.Id">Add more</a>
+
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-right">Total:</td>
+                    <td class="text-right">
+                        @Model.ShoppingCartTotal.ToString("c")
+
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+
+        @if (Model.ShoppingCart.ShoppingCartItems.Count > 0)
+        {
+            <div class="text-right">
+                <div class="btn-group ">
+                    <a class="btn btn-success" asp-controller="Order" asp-action="Checkout">Check out</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <p>error sorry </p>
+
+        }
+
+    </div>*@
+
+<!-- Cart Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-lg-8 table-responsive mb-5">
+            <table class="table table-light table-borderless table-hover text-center mb-0">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Products</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    @if(Model.CartItems.Count == 0)
+                    {
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td class="align-middle">
+                                <h2> Cart is empty</h2>
+                                <a asp-action="shop" asp-controller="Products" class="btn btn-primary mt-3">Visit Shop</a>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.CartItems)
+                        {
+                            <tr id="row-@item.product.Id">
+                                <td class="align-middle"><img src="~/Uploads/products/@item.product.ProductImage" alt="" style="width: 50px;"> @item.product.Name</td>
+                                <td class="align-middle">@item.product.Price.ToString("c")</td>
+                                <td class="align-middle">
+                                    <div class="input-group quantity mx-auto" style="width: 100px;">
+                                        <div class="input-group-btn">
+                                            <!-- Use a data attribute to store the product ID -->
+                                            <form class="remove-from-cart-form" data-product-id="@item.product.Id">
+                                                <button type="button" class="btn btn-sm btn-primary btn-minus">
+                                                    <i class="fa fa-minus"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <p class="form-control form-control-sm bg-secondary border-0 text-center">@item.Amount</p>
+                                        <div class="input-group-btn">
+                                            <!-- Use a data attribute to store the product ID -->
+                                            <form class="add-to-cart-form" data-product-id="@item.product.Id">
+                                                <button type="button" class="btn btn-sm btn-primary btn-plus">
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="align-middle" id="singletotalprice-@item.product.Id">@((item.Amount * item.product.Price).ToString("c"))</td>
+                                <form class="remove-form" data-product-id="@item.product.Id">
+                                <td class="align-middle"><button class="btn btn-sm btn-danger" id="removebtn"><i class="fa fa-times"></i></button></td>
+                                </form>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-4">
+            <form class="mb-30" action="">
+                <div class="input-group">
+                    <input type="text" class="form-control border-0 p-4" placeholder="Coupon Code">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary">Apply Coupon</button>
+                    </div>
+                </div>
+            </form>
+            <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Cart Summary</span></h5>
+            <div class="bg-light p-30 mb-5">
+                <div class="border-bottom pb-2">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h6>Subtotal</h6>
+                        <h6>$150</h6>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <h6 class="font-weight-medium">Shipping</h6>
+                        <h6 class="font-weight-medium">$10</h6>
+                    </div>
+                </div>
+                <div class="pt-2">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5>Total</h5>
+                        <h5 id="totalprice">@Model.ShoppingCartTotal.ToString("c")</h5>
+                    </div>
+                    <a asp-action="Checkout" asp-controller="Order" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cart End -->
+
+@section scripts {
+
+    <script>
+        $(document).ready(function () {
+            $('.btn-plus').click(function () {
+                var form = $(this).closest('.add-to-cart-form'); // Find the parent form
+                var productId = form.data('product-id'); // Get the product ID from the data attribute
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("increaseproductamount", "ShoppingCart")',
+                    data: { id: productId },
+                    success: function (data) {
+                        // Update the quantity on the page
+                        var rowId = 'row-' + productId;
+                        var quantityElement = $('#' + rowId + ' .quantity p');
+                        quantityElement.text(data.currentAmount);
+                        $('#totalprice').text('$' + data.totalAmount);
+                        $('#singletotalprice' + '-' + productId).text('$' + data.singleTotalAmount);
+
+                        // If you want to update the total as well, update it here
+                    },
+                    error: function () {
+                        // Handle error if needed
+                    }
+                });
+            });
+             $('.btn-minus').click(function () {
+                var form = $(this).closest('.remove-from-cart-form'); // Find the parent form
+                var productId = form.data('product-id'); // Get the product ID from the data attribute
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("decreaseproductamount", "ShoppingCart")',
+                    data: { id: productId },
+                    success: function (data) {
+                        // Update the quantity on the page
+                        var rowId = 'row-' + productId;
+                        var quantityElement = $('#' + rowId + ' .quantity p');
+                        if (data.currentAmount > 0)
+                        {
+                            quantityElement.text(data.currentAmount);
+                        }
+                        else
+                        {
+                            $('#' + rowId).remove(); // Remove the entire row from the table
+                        }
+                        $('#totalprice').text('$' + data.totalAmount);
+                        $('#singletotalprice' + '-' + productId).text('$' + data.singleTotalAmount);
+
+
+                        // If you want to update the total as well, update it here
+                    },
+                    error: function () {
+                        // Handle error if needed
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#removebtn').on('click', function () {
+                var form = $(this).closest('.remove-form'); // Find the parent form
+                var productId = form.data('product-id'); // Get the product ID from the data attr
+                $.ajax({
+                    url: '@Url.Action("ClearCart", "ShoppingCart")',
+                    type: 'GET', 
+                    success: function (response) {
+                        var rowId = 'row-' + productId;
+                        $('#' + rowId).remove();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+
+    </script>
+}

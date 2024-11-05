@@ -1,0 +1,233 @@
+﻿@model ProductsViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+<hr />
+
+
+<head>
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+    </script>
+</head>
+
+@*<div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create" method="post" enctype="multipart/form-data" asp-controller="Products">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DepartmentID"></label>
+                    <select class="select" asp-for="DepartmentID" asp-items="@(new SelectList(Model.Departmentss, "Id" , "Name"))">
+                        <option></option>
+                    </select>
+                </div>
+                <div class="form-group">
+
+                    <label asp-for="CategoryID"></label>
+                    <select class="select" asp-for="CategoryID" asp-items="@(new SelectList(Model.Categoryss, "Id" , "Name"))">
+                        <option value=""></option>
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label asp-for="Images" class="control-label"></label>
+                    <input type="file" asp-for="Images" class="form-control" multiple />
+                    <span asp-validation-for="Images" class="text-danger"></span>
+                </div>
+
+
+
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>*@
+
+
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-lg-8">
+            <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Create Product</span></h5>
+            <div class="bg-light p-30 mb-5">
+                <form asp-action="Create" method="post" enctype="multipart/form-data" asp-controller="Products">
+                    <div class="row">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Brand" class="control-label"></label>
+                            <input asp-for="Brand" class="form-control" />
+                            <span asp-validation-for="Brand" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Description" class="control-label"></label>
+                            <input asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Price" class="control-label"></label>
+                            <input asp-for="Price" class="form-control" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="DepartmentName"></label>
+                            <select class="custom-select" asp-for="DepartmentId" asp-items="ViewBag.DepartmentId">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="CategoryName"></label>
+                            <select class=" custom-select" asp-for="CategoryId" asp-items="ViewBag.CategoryId">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                      
+                        <div class="col-md-6 form-group">
+                            <label asp-for="MultiImageUpload" class="control-label">choose multiple images</label>
+                            <input type="file" asp-for="MultiImageUpload" onchange="checkFileSizeAndExtensionMultiple(this)" class="form-control" multiple />
+                            <span asp-validation-for="MultiImageUpload" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="SingleImageUpload"  class="control-label">choose main image</label>
+                            <input type="file" asp-for="SingleImageUpload" onchange="checkFileSizeAndExtensionSingle(this)" class="form-control"/>
+                            <span asp-validation-for="SingleImageUpload" class="text-danger"></span>
+                        </div>
+                       @*  <div class="col-md-6 form-group">
+                            <label>Country</label>
+                            <select class="custom-select">
+                                <option selected>United States</option>
+                                <option>Afghanistan</option>
+                                <option>Albania</option>
+                                <option>Algeria</option>
+                            </select>
+                        </div> *@
+                        <div class=" col-md-6 form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 form-group">
+                <a class="btn btn-primary" asp-action="Index">Back To Products List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+    <script>
+        $(document).ready(function () {
+
+            $('#DepartmentId').on('change', function () {
+
+                var depid = $(this).val();
+                var catlist = $('#CategoryId');
+
+                catlist.empty();
+                catlist.append('<option></option>');
+
+                if (depid !== '') {
+                    $.ajax({
+
+                        url: '/Products/GetCategory?depid=' + depid,
+                        success: function (categoryy) {
+
+                            $.each(categoryy, function (i, catt) {
+                                catlist.append($('<option></option>').attr('value', catt.id).text(catt.name));
+
+                            });
+
+                        },
+                        error: function () {
+                            alert('something is wrong');
+                        }
+
+                    });
+                }
+
+            });
+
+        });
+
+
+    </script>
+
+    @*<script type="text/javascript">
+            function preventBack() { window.history.forward(); }
+            setTimeout("preventBack()", 0);
+            window.onunload = function () { null };
+        </script>*@
+
+
+    <script>
+        function checkFileSizeAndExtensionMultiple(input, event) {
+            if (input.files && input.files.length > 0) {
+                for (var i = 0; i < input.files.length; i++) {
+                    var file = input.files[i];
+                    var fileSize = file.size;
+                    var fileName = file.name;
+                    var fileExtension = fileName.substr(fileName.lastIndexOf('.') + 1);
+
+                    if (fileSize > 200000) {
+                        alert("The size of the image should not exceed 200KB.");
+                        input.value = "";
+                        event.preventDefault();
+                        return;
+                    }
+                    else if (fileExtension != "jpg" && fileExtension != "jpeg" && fileExtension != "png" && fileExtension != "gif" && fileExtension != "PNG" && fileExtension != "JPG" && fileExtension != "JPEG") {
+                        alert("only images allowed");
+                        input.value = "";
+                        event.preventDefault();
+                        return;
+                    }
+                }
+            }
+        }
+
+    </script>
+
+    <script>
+        function checkFileSizeAndExtensionSingle(input) {
+            if (input.files && input.files[0]) {
+                var file = input.files[0];
+                var fileSize = file.size;
+                var fileName = file.name;
+                var fileExtension = fileName.substr(fileName.lastIndexOf('.') + 1);
+
+                if (fileSize > 200000) {
+                    alert("The size of the image should not exceed 200KB.");
+                    input.value = "";
+                }
+                else if (fileExtension != "jpg" && fileExtension != "jpeg" && fileExtension != "png" && fileExtension != "gif" && fileExtension != "PNG" && fileExtension != "JPG" && fileExtension != "JPEG") {
+                    alert("only images allowed");
+                    input.value = "";
+                }
+            }
+        }
+
+    </script>
+
+
+
+}

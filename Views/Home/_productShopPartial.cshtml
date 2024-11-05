@@ -1,0 +1,294 @@
+﻿@model ProductShopViewModel
+
+@{
+    var departmentQuery = Context.Request.Query["depName"];
+
+}
+
+<h2>partial view </h2>
+<div class="col-12 pb-1">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <a class="btn btn-primary" id="resetFilter"><h5>Reset Filters</h5></a>
+    </div>
+</div>
+@* @if (!string.IsNullOrEmpty(departmentQuery))
+{
+    @foreach (var item in Model.Products.Where(d => d.Department.Name == departmentQuery))
+    {
+        <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+            <div class="product-item bg-light mb-4">
+                <div class="product-img position-relative overflow-hidden">
+                    <img class="img-fluid w-100 " src="~/Uploads/Wireless-Smoke-Temperature-detector-01.jpg" alt="Image">
+
+                    <div class="product-action">
+                        <a href="" class="btn btn-dark"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                        <a asp-action="Details" asp-controller="Products" asp-route-id="@item.Id" class="btn btn-info" target="_blank"><i class="fa fa-search"></i> View Details</a>
+                    </div>
+                </div>
+
+                <div class="text-center py-4">
+                    <a class="h6 text-decoration-none text-truncate" href="">@item.Name</a>
+                    <div class="d-flex align-items-center justify-content-center mt-2">
+                        <h5>@item.Price</h5>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center mb-1">
+                        <small class="fa fa-star text-primary mr-1"></small>
+                        <small class="fa fa-star text-primary mr-1"></small>
+                        <small class="fa fa-star text-primary mr-1"></small>
+                        <small class="fa fa-star text-primary mr-1"></small>
+                        <small class="fa fa-star text-primary mr-1"></small>
+                        <small>(99)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+} *@
+@* else
+{ *@
+    @foreach (var item in Model.Products)
+    {
+        <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+        <div class="product-item testimage bg-light mb-4">
+                <div class="product-img position-relative overflow-hidden">
+                    <img class="img-fluid w-100 " src="~/Uploads/products/@item.ProductImage" alt="Image">
+
+                    <div class="product-action">
+                        <a href="" class="btn btn-dark"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+                        <a asp-action="Details" asp-controller="Products" asp-route-id="@item.Id" class="btn btn-info" target="_blank"><i class="fa fa-search"></i> View Details</a>
+                    </div>
+                </div>
+
+                <div class="text-center py-4">
+                    <a class="h6 text-decoration-none text-truncate" href="">@item.Name</a>
+                    <div class="d-flex align-items-center justify-content-center mt-2">
+                        <h5>@item.Price</h5>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center mb-1">
+                        <small class="fa fa-star text-primary mr-1"></small>
+                        <small class="fa fa-star text-primary mr-1"></small>
+                        <small class="fa fa-star text-primary mr-1"></small>
+                        <small class="fa fa-star text-primary mr-1"></small>
+                        <small class="fa fa-star text-primary mr-1"></small>
+                        <small>(99)</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+@* } *@
+
+
+
+
+
+    <div class="col-12">
+        @if (Model.TotalPages > 1)
+        {
+            <nav>
+                <ul class="pagination justify-content-center">
+                    @if (Model.Page > 1)
+                    {
+                        <li class="page-item"><a class="page-link" asp-action="FilterProductsByCategory" asp-controller="Home" asp-route-depName="@Model.depName" asp-route-pageNumber="@(Model.Page - 1)">Previous</a></li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+
+                    }
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                    <li class="page-item @(i == Model.Page ? "active" : "")">
+
+                        <button class="page-link" onclick="capturePageNumber(@i)">@i</button>
+
+                     </li>
+
+                    }
+                    @if (Model.Page < Model.TotalPages)
+                    {
+                        <li class="page-item"><a class="page-link" asp-action="FilterProductsByCategory" asp-controller="Home" asp-route-depName="@Model.depName" asp-route-pageNumber="@(Model.Page + 1)">Next</a></li>
+
+                    }
+                    else
+                    {
+                        <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+
+                    }
+                    @*
+            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li> *@
+                </ul>
+            </nav>
+        }
+    </div>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('.findcheckbox').on('change', function () {
+
+
+            let urlParams = new URLSearchParams(window.location.search);
+
+            urlParams.delete('categories');
+
+            var depName = urlParams.get('depName');
+
+
+            var selectedPriceRange = $(".findradio:checked").val();
+
+            var selectedCategories = [];
+
+            $('.findcheckbox:checked').each(function () {
+                selectedCategories.push(this.value);
+            })
+
+            if (selectedCategories.length > 0) {
+                urlParams.append('categories', selectedCategories.join(','));
+            }
+
+            const newUrl = `${window.location.origin}${window.location.pathname}?${urlParams.toString()}`;
+
+            window.history.pushState({}, document.title, newUrl);
+
+            $.ajax({
+                url: '@Url.Action("FilterProductsByCategory")',
+                type: 'POST',
+                data: { categories: selectedCategories, pricerange: selectedPriceRange, depName: depName },
+                success: function (response) {
+                    $('#filteredProductsDiv').html(response);
+                    $('html, body').animate({
+                        scrollTop: $('#filteredProductsDiv').offset().top
+                    }, 0);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    }); // pass all url parameters to index5 and remove pasigination from filterproductbycategory method and i can make index5 method handel everything and return partial and make getfilteredproductbycategry method only to return new filtered products
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#resetFilter').on('click', function (event) {
+            event.preventDefault(); 
+
+            $('.findcheckbox').prop('checked', false);
+            $('.findradio').prop('checked', false);
+
+
+            const mainPath = window.location.origin + window.location.pathname;
+
+            window.history.pushState({}, document.title, mainPath);
+
+            location.reload();
+
+            var selectedCategories = [];
+            $.ajax({
+                url: '@Url.Action("FilterProductsByCategory")',
+                type: 'POST',
+                data: { categories: selectedCategories, pricerange: selectedPriceRange },
+                success: function (response) {
+                    $('#filteredProductsDiv').html(response);
+                    $('html, body').animate({
+                        scrollTop: $('#filteredProductsDiv').offset().top
+                    }, 0);
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+
+        });
+    });
+</script>
+@* <script>
+    $(document).ready(function () {
+        $('#testpagelink').on('click', function (event) {
+            event.preventDefault(); // Prevent default link behavior
+
+            var selectedPriceRange = $(".findradio:checked").val();
+
+            var selectedCategories = [];
+            $('.findcheckbox:checked').each(function () {
+                selectedCategories.push(this.value);
+            })
+
+            var urlParams = new URLSearchParams(window.location.search);
+            var depName = urlParams.get('depName');
+            var pageNumber = $('#testpagelink').text();
+            const categoriesParam = urlParams.get('categories');
+            console.log(pageNumber)
+            var categoriesNames = categoriesParam ? categoriesParam.split(',') : [];
+            // Optionally, trigger an AJAX call to update content if necessary
+            var selectedCategories = [];
+            $.ajax({
+                url: '@Url.Action("FilterProductsByCategory")',
+                type: 'POST',
+                data: { categories: categoriesNames, pricerange: selectedPriceRange, depName: depName, pageNumber: pageNumber },
+                success: function (response) {
+                    $('#filteredProductsDiv').html(response);
+                    $('html, body').animate({
+                        scrollTop: $('#filteredProductsDiv').offset().top
+                    }, 0);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+
+
+        });
+    });
+</script> *@
+
+<script>
+    function capturePageNumber(pageNumber) {
+
+        var selectedPriceRange = $(".findradio:checked").val();
+
+        var selectedCategories = [];
+
+        $('.findcheckbox:checked').each(function () {selectedCategories.push(this.value);})
+
+        var urlParams = new URLSearchParams(window.location.search);
+
+        var depName = urlParams.get('depName');
+
+        var page = pageNumber; 
+
+        const categoriesParam = urlParams.get('categories');
+
+        var categoriesNames = categoriesParam ? categoriesParam.split(',') : [];
+
+        $.ajax({
+            url: '@Url.Action("FilterProductsByCategory")',
+            type: 'POST',
+            data: { categories: categoriesNames, pricerange: selectedPriceRange, depName: depName, pageNumber: page },
+            success: function (response) {
+                $('#filteredProductsDiv').html(response);
+                $('html, body').animate({
+                    scrollTop: $('#filteredProductsDiv').offset().top
+                }, 0);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+       
+    }
+</script>
+
+
+

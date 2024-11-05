@@ -1,0 +1,90 @@
+﻿@model DepartmentsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container-fluid pt-5">
+    <table class="table table-bordered table-hover bg-light" id="myTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    @Html.Label("Department Name")
+                </th>
+                <th>
+                    @Html.Label("Total Number of Categories belong to this Department")
+                </th>
+                <th>
+                    @Html.Label("Total Number of Products belong to this Department")
+                </th>
+                <th>@Html.Label("Action Links")</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Categorys.Count)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Productss.Count)
+                </td>
+                <td>
+                    <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit Department</a>
+
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete Department</a>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <h4> Related Categories </h4>
+
+    <table class="table table-bordered table-hover bg-light" id="myTable2">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    @Html.Label("Category Name")
+                </th>
+                <th>
+                    @Html.Label("Deparment Name")
+                </th>
+                <th>
+                    @Html.Label("Total Number of Products belong to this Category")
+                </th>
+                <th>@Html.Label("Action Links")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Categorys)
+            {
+
+
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Department.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Productss.Count)
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-primary" asp-action="Edit" asp-controller="Categories" asp-route-id="@item.Id">Edit Category</a>
+
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-controller="Categories" asp-route-id="@item.Id">Delete Category</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a class="btn btn-primary" asp-action="Index">Back to Departments List</a>
+
+</div>
+

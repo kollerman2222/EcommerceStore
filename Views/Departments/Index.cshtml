@@ -1,0 +1,68 @@
+﻿@model IEnumerable<DepartmentsViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link href="~/css/datatables.css" rel="stylesheet" />
+</head>
+
+
+<div class="container-fluid pt-5">
+   
+    <p>
+        <a class="btn btn-primary" asp-action="Create">Create New</a>
+    </p>
+
+    <table class="table table-bordered table-hover bg-light" id="myTable">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    @Html.Label("Department Image")
+                </th>
+                <th>
+                    @Html.Label("Department Name")
+                </th>
+                <th>
+                    @Html.Label("Action Links")
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="~/Uploads/departments/@item.DepartmentImage" style="width:50px;" class="img-thumbnail" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                        <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                        <a class="btn btn-outline-primary" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+    @section scripts{
+
+
+        <script src="~/js/datatables.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('#myTable').DataTable();
+
+
+            });
+        </script>
+
+
+    }
