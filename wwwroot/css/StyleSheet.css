@@ -1,0 +1,36 @@
+﻿#thumbnail-slider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+}
+
+#thumbnail-slider img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin: 10px;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+#thumbnail-slider .slider-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@media (max-width: 768px) and (min-width: 500px) {
+    #thumbnail-slider img {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 499px) {
+    #thumbnail-slider img {
+        width: 25px;
+        height: 25px;
+    }
+}
